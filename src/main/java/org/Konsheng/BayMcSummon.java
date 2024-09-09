@@ -4,7 +4,6 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
@@ -13,6 +12,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -21,7 +21,6 @@ public class BayMcSummon extends JavaPlugin {
 
     private BukkitAudiences adventure;
     private final MiniMessage miniMessage = MiniMessage.miniMessage();
-    private final String prefix = "<gradient:#495aff:#0acffe><b>BayMc</b></gradient> <gray>» ";
 
     // 保存每个玩家的上次执行命令时间
     private final HashMap<UUID, Long> lastCommandTime = new HashMap<>();
@@ -46,7 +45,7 @@ public class BayMcSummon extends JavaPlugin {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         // 确保命令发送者是玩家，并且玩家拥有权限
         if (sender instanceof Player player) {
             if (!player.hasPermission("baymc.summon")) {
@@ -126,11 +125,10 @@ public class BayMcSummon extends JavaPlugin {
 
             // 分批生成生物
             summonEntitiesInBatches(player, entityType, location, quantity);
-            return true;
         } else {
             sendFormattedMessage(sender, "<white>此命令只能由玩家执行");
-            return true;
         }
+        return true;
     }
 
     // 分批生成生物
@@ -172,6 +170,7 @@ public class BayMcSummon extends JavaPlugin {
     // 使用 Adventure API 和 MiniMessage 发送带前缀的格式化消息
     private void sendFormattedMessage(CommandSender sender, String message) {
         Audience audience = adventure.sender(sender);
+        String prefix = "<gradient:#495aff:#0acffe><b>BayMc</b></gradient> <gray>» ";
         Component component = miniMessage.deserialize(prefix + message);
         audience.sendMessage(component);
     }
