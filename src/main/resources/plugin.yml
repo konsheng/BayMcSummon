@@ -1,0 +1,15 @@
+name: BayMcSummon
+version: '1.0'
+main: org.Konsheng.BayMcSummon
+api-version: '1.21'
+authors: [ Konsheng ]
+description: 允许管理员批量生成生物
+commands:
+  summon:
+    description: 生成多个实体
+    usage: /summon <实体名称> <数量>
+    permission: baymc.summon
+permissions:
+  baymc.summon:
+    description: 允许玩家使用 /summon 命令生成实体
+    default: op
