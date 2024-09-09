@@ -115,7 +115,7 @@ public class BayMcSummon extends JavaPlugin implements TabCompleter {
                         sendFormattedMessage(player, "<white>您提供的坐标格式无效");
                         return true;
                     }
-                } else if (args.length >= 2) {
+                } else if (args.length >= 2 && !hasCoords) {
                     // 如果没有坐标但提供了玩家名称，使用该玩家的当前位置
                     Player targetPlayer = getServer().getPlayer(args[1]);
                     if (targetPlayer != null && targetPlayer.isOnline()) {
@@ -138,10 +138,21 @@ public class BayMcSummon extends JavaPlugin implements TabCompleter {
                     } else if (arg.equalsIgnoreCase("-forcespeed")) {
                         forceSpeed = true;
                     } else if (arg.startsWith("-health=")) {
+                        // 检查是否输入了血量值
+                        String[] healthArg = arg.split("=");
+                        if (healthArg.length < 2 || healthArg[1].isEmpty()) {
+                            sendFormattedMessage(player, "<white>请指定血量，例如: <green>-health=100");
+                            return true;
+                        }
                         try {
-                            health = Double.parseDouble(arg.split("=")[1]); // 提取并解析血量
+                            health = Double.parseDouble(healthArg[1]);
+                            // 检查血量范围是否在 2 到 1024 之间
+                            if (health < 2 || health > 1024) {
+                                sendFormattedMessage(player, "<white>血量超出范围: 请输入 <green>2-1024<white> 之间的数值");
+                                return true;
+                            }
                         } catch (NumberFormatException e) {
-                            sendFormattedMessage(player, "<white>无效的血量值: <green>" + arg.split("=")[1]);
+                            sendFormattedMessage(player, "<white>无效的血量值: <green>" + healthArg[1]);
                             return true;
                         }
                     } else if (isNumeric(arg)) {
@@ -278,17 +289,15 @@ public class BayMcSummon extends JavaPlugin implements TabCompleter {
                     }
                 }
             } else {
-                // 如果是数量或参数，则提供 -forcescalar、-forcespeed 和 -health 补全
-                if (args.length > 4 && isNumeric(args[args.length - 1])) {
-                    if (!containsFlag(args, "-forcescalar")) {
-                        completions.add("-forcescalar");
-                    }
-                    if (!containsFlag(args, "-forcespeed")) {
-                        completions.add("-forcespeed");
-                    }
-                    if (!containsFlag(args, "-health=")) {
-                        completions.add("-health=");
-                    }
+                // 提供 -forcescalar、-forcespeed 和 -health 参数的补全
+                if (!containsFlag(args, "-forcescalar")) {
+                    completions.add("-forcescalar");
+                }
+                if (!containsFlag(args, "-forcespeed")) {
+                    completions.add("-forcespeed");
+                }
+                if (!containsFlag(args, "-health=")) {
+                    completions.add("-health=100"); // 默认提供一个数值进行补全
                 }
             }
         }
