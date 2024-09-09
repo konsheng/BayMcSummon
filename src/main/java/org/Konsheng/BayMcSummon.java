@@ -148,7 +148,7 @@ public class BayMcSummon extends JavaPlugin implements TabCompleter {
                             health = Double.parseDouble(healthArg[1]);
                             // 检查血量范围是否在 2 到 1024 之间
                             if (health < 2 || health > 1024) {
-                                sendFormattedMessage(player, "<white>血量超出范围: 请输入 <green>2-1024<white> 之间的数值");
+                                sendFormattedMessage(player, "<white>血量超出范围: 请输入 <green>2-1024 <white>之间的数值");
                                 return true;
                             }
                         } catch (NumberFormatException e) {
@@ -200,12 +200,12 @@ public class BayMcSummon extends JavaPlugin implements TabCompleter {
                 if (batchCount < fullBatches) {
                     summonBatch(player, entityType, location, BATCH_SIZE, health);
                     totalSpawned += BATCH_SIZE;
-                    sendFormattedMessage(player, "<white>已生成 " + totalSpawned + "/" + totalQuantity + " 个实体");
+                    sendFormattedMessage(player, "<white>成功生成 <green>" + totalSpawned + "/" + totalQuantity + " <white>个实体");
                     batchCount++;
                 } else if (batchCount == fullBatches && remaining > 0) {
                     summonBatch(player, entityType, location, remaining, health);
                     totalSpawned += remaining;
-                    sendFormattedMessage(player, "<white>已生成 " + totalSpawned + "/" + totalQuantity + " 个实体");
+                    sendFormattedMessage(player, "<white>成功生成 <green>" + totalSpawned + "/" + totalQuantity + " <white>个实体");
                     batchCount++;
                 } else {
                     sendFormattedMessage(player, "<white>实体生成完毕，共生成 <green>" + totalSpawned + "/" + totalQuantity + " 个实体");
@@ -223,7 +223,7 @@ public class BayMcSummon extends JavaPlugin implements TabCompleter {
     // 立即生成所有实体
     private void summonEntitiesInstantly(Player player, EntityType entityType, Location location, int totalQuantity, double health) {
         summonBatch(player, entityType, location, totalQuantity, health);
-        sendFormattedMessage(player, "<white>实体生成完毕，共生成 <green>" + totalQuantity + "/" + totalQuantity + " 个实体");
+        sendFormattedMessage(player, "<white>全部实体生成完毕，共生成 <green>" + totalQuantity + "/" + totalQuantity + " <white>个实体");
     }
 
     // 每批生成生物，并设置血量
@@ -237,7 +237,7 @@ public class BayMcSummon extends JavaPlugin implements TabCompleter {
         }
 
         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
-        sendFormattedMessage(player, "<white>成功生成 " + quantity + " 个 " + entityType.name().toLowerCase());
+        sendFormattedMessage(player, "<white>成功生成 <green>" + quantity + " <white>个 <green>" + entityType.name().toLowerCase());
     }
 
     private void sendFormattedMessage(CommandSender sender, String message) {
