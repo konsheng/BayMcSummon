@@ -115,7 +115,7 @@ public class BayMcSummon extends JavaPlugin implements TabCompleter {
                         sendFormattedMessage(player, "<white>您提供的坐标格式无效");
                         return true;
                     }
-                } else if (args.length >= 2 && !hasCoords) {
+                } else if (args.length >= 2) {
                     // 如果没有坐标但提供了玩家名称，使用该玩家的当前位置
                     Player targetPlayer = getServer().getPlayer(args[1]);
                     if (targetPlayer != null && targetPlayer.isOnline()) {
@@ -260,33 +260,35 @@ public class BayMcSummon extends JavaPlugin implements TabCompleter {
             } else if (args.length == 2 || args.length == 3 || args.length == 4) {
                 // 补全坐标或玩家名
                 if (args.length == 2 || args.length == 3 || args.length == 4) {
-                    if (sender instanceof Player player) {
-                        Location loc = player.getLocation();
-                        if (args.length == 2) {
-                            completions.add(String.valueOf((int) loc.getX()));
-                        } else if (args.length == 3) {
-                            completions.add(String.valueOf((int) loc.getY()));
-                        } else if (args.length == 4) {
-                            completions.add(String.valueOf((int) loc.getZ()));
-                        }
-                    }
                     // 提供玩家名补全
-                    if (args.length == 2 && completions.isEmpty()) {
+                    if (args.length == 2 && !isNumeric(args[1])) {
                         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                             completions.add(onlinePlayer.getName());
                         }
+                    } else if (sender instanceof Player player) {
+                        // 如果已经开始输入坐标，则补全坐标
+                        Location loc = player.getLocation();
+                        if (args.length == 2 && isNumeric(args[1])) {
+                            completions.add(String.valueOf((int) loc.getX()));
+                        } else if (args.length == 3 && isNumeric(args[1])) {
+                            completions.add(String.valueOf((int) loc.getY()));
+                        } else if (args.length == 4 && isNumeric(args[1])) {
+                            completions.add(String.valueOf((int) loc.getZ()));
+                        }
                     }
                 }
-            } else if (args.length > 5) {
-                // 如果是最后一个参数，提供 -forcescalar、-forcespeed 和 -health 补全
-                if (!containsFlag(args, "-forcescalar")) {
-                    completions.add("-forcescalar");
-                }
-                if (!containsFlag(args, "-forcespeed")) {
-                    completions.add("-forcespeed");
-                }
-                if (!containsFlag(args, "-health=")) {
-                    completions.add("-health=");
+            } else {
+                // 如果是数量或参数，则提供 -forcescalar、-forcespeed 和 -health 补全
+                if (args.length > 4 && isNumeric(args[args.length - 1])) {
+                    if (!containsFlag(args, "-forcescalar")) {
+                        completions.add("-forcescalar");
+                    }
+                    if (!containsFlag(args, "-forcespeed")) {
+                        completions.add("-forcespeed");
+                    }
+                    if (!containsFlag(args, "-health=")) {
+                        completions.add("-health=");
+                    }
                 }
             }
         }
