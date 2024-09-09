@@ -60,7 +60,7 @@ public class BayMcSummon extends JavaPlugin {
             if (lastCommandTime.containsKey(playerUUID)) {
                 long lastTime = lastCommandTime.get(playerUUID);
                 if (currentTime - lastTime < 1000) {
-                    sendFormattedMessage(player, "<red>你每秒只能执行一次此命令！");
+                    sendFormattedMessage(player, "<white>您每秒只能执行一次此命令");
                     return true;
                 }
             }
@@ -91,7 +91,7 @@ public class BayMcSummon extends JavaPlugin {
                     double z = Double.parseDouble(args[3]);
                     location = new Location(player.getWorld(), x, y, z);
                 } catch (NumberFormatException e) {
-                    sendFormattedMessage(player, "<white>无效的坐标格式！");
+                    sendFormattedMessage(player, "<white>您提供的坐标格式无效");
                     return true;
                 }
             }
@@ -120,7 +120,7 @@ public class BayMcSummon extends JavaPlugin {
 
             // 如果没有使用 -force 参数且数量超过 100，给出提示
             if (quantity > MAX_ENTITIES_DEFAULT && !force) {
-                sendFormattedMessage(player, "<red>默认最多生成 " + MAX_ENTITIES_DEFAULT + " 个实体。使用 -force 参数可强制生成更多。");
+                sendFormattedMessage(player, "<white>单次最多生成 " + MAX_ENTITIES_DEFAULT + " 个实体, 请使用 -force 参数可强制生成更多");
                 return true;
             }
 
@@ -166,7 +166,7 @@ public class BayMcSummon extends JavaPlugin {
         // 播放音效
         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
 
-        sendFormattedMessage(player, "<white>您已成功生成 <green>" + quantity + "<white> 个" + "<green>" + entityType.name().toLowerCase());
+        sendFormattedMessage(player, "<white>以为您成功生成 <green>" + quantity + " <white>个" + "<green> " + entityType.name().toLowerCase());
     }
 
     // 使用 Adventure API 和 MiniMessage 发送带前缀的格式化消息
